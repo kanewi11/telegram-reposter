@@ -11,7 +11,7 @@ from reposter.logger import logger
 Base = declarative_base()
 
 BASE_DIR = Path(__file__).parent
-DB_PATH = BASE_DIR.joinpath('telegram.db')
+DB_PATH = BASE_DIR.joinpath('posts.db')
 
 engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 Session = sessionmaker(bind=engine)

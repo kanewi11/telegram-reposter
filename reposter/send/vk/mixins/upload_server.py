@@ -9,8 +9,8 @@ class UploadMixin:
     _vk_session: vk_api.VkApi
     group_id: int
 
-    video = ['.AVI', '.MP4', '.3GP', '.MPEG', '.MOV', '.MP3', '.FLV']
-    photo = ['.PNG', '.JPEG', '.JPG', '.HEIC']
+    video = ['.AVI', '.MP4', '.3GP', '.MPEG', '.MOV', '.FLV', '.M4V', '.WMV']
+    photo = ['.PNG', '.JPEG', '.JPG', '.HEIC', '.GIF', '.BMP']
 
     def _get_attachment(self, file_paths: List[str]) -> Any:
         uploads = []

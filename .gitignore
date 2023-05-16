@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm,python,macos
 
 sessions/
+files/
+files/*
 test.py
 sessions/*
 *.session

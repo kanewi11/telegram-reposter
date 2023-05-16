@@ -52,15 +52,23 @@ class VkPoster(UploadMixin):
     @staticmethod
     def _html_to_text(html) -> str:
         hrefs = []
+        html = html.replace('\n', '||')
         soup = bs(html, 'lxml')
-        a_tags = soup.findAll('a', href=True)
+
+        for x in soup.find_all():
+            if len(x.get_text(strip=True)) == 0:
+                x.extract()
+
+        a_tags = soup.find_all('a', href=True)
         for a_tag in a_tags:
             href = a_tag.get('href')
             if href in hrefs:
                 continue
             hrefs.append(href)
             a_tag.append(f' ({href})')
-        return soup.get_text()
+
+        text = soup.get_text()
+        return text.replace('||', '\n')
 
     def _make_post(self, file_paths: Union[List[str]]) -> Tuple[str, List[str]]:
         text = ''

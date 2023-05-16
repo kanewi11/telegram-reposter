@@ -1,7 +1,2 @@
-
-def main():
-    ...
-
-
-if __name__ == '__main__':
-    main()
+from .instagram import InstPoster
+from .vk import VkPoster

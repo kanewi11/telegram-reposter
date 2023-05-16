@@ -1,20 +1,18 @@
 import sys
-import time
 import traceback
-from pathlib import Path
+from typing import Union
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
-from typing import List, Tuple, Union
 
 import vk_api
-from bs4 import BeautifulSoup as bs
 
 from reposter.logger import logger
+from reposter.post import PostMaker
+from reposter.base.models import Post
 from reposter.send.vk.mixins import UploadMixin
-from reposter.base.models import get_new_posts, posted
 
 
-class VkPoster(UploadMixin):
+class VkPoster(UploadMixin, PostMaker):
     _vk_session: vk_api.VkApi = None
     group_id: int = None
     __token: str = None
@@ -28,9 +26,13 @@ class VkPoster(UploadMixin):
                       '&v=5.131' \
                       '&state=123456'
 
-    def __init__(self, token: str, group_id: int):
+    def __init__(self, token: str, group_id: int, enabled: bool):
         self.__token = token
         self.group_id = group_id
+        self.enabled = enabled
+
+        if not self.enabled:
+            return
 
         if not self.__token:
             self.make_token()
@@ -45,76 +47,29 @@ class VkPoster(UploadMixin):
     def __vk_auth(self):
         self._vk_session = vk_api.VkApi(token=self.__token)
 
-    @staticmethod
-    def _get_post_file_paths(post_dir: Path) -> List[str]:
-        return [path.__str__() for path in Path(post_dir).iterdir() if path.is_file()]
+    def send_posts(self, post: Post):
+        if not self.enabled:
+            return
 
-    @staticmethod
-    def _html_to_text(html) -> str:
-        hrefs = []
-        html = html.replace('\n', '||')
-        soup = bs(html, 'lxml')
+        try:
+            file_paths = self._get_post_file_paths(post.dir_path)
+            text, file_paths = self.make_post_vk(file_paths)
+            attachment = self._get_attachment(file_paths)
 
-        for x in soup.find_all():
-            if len(x.get_text(strip=True)) == 0:
-                x.extract()
-
-        a_tags = soup.find_all('a', href=True)
-        for a_tag in a_tags:
-            href = a_tag.get('href')
-            if href in hrefs:
-                continue
-            hrefs.append(href)
-            a_tag.append(f' ({href})')
-
-        text = soup.get_text()
-        return text.replace('||', '\n')
-
-    def _make_post(self, file_paths: Union[List[str]]) -> Tuple[str, List[str]]:
-        text = ''
-        files = []
-        for file_path in file_paths:
-            if 'HTML_text.txt' in file_path:
-                with open(file_path) as text_file:
-                    text = self._html_to_text(text_file.read())
-                continue
-            elif 'text.txt' in file_path:
-                continue
-            files.append(file_path)
-        return text, files
-
-    def _send_posts(self):
-        posts = get_new_posts()
-        for post in posts:
-            try:
-                file_paths = self._get_post_file_paths(post.dir_path)
-                text, file_paths = self._make_post(file_paths)
-                attachment = self._get_attachment(file_paths)
-
-                post_data = self._vk_session.method('wall.post', {
-                                    'owner_id': f'-{self.group_id}',
-                                    'message': text,
-                                    'attachment': attachment,
-                                })
-                post_id = post_data.get('post_id')
-                if post_id:
-                    self._vk_session.method('likes.add', {
-                        'type': 'post',
-                        'owner_id': f'-{self.group_id}',
-                        'item_id': post_id,
-                    })
-            except Exception:
-                logger.error(traceback.format_exc())
-            posted(post.dir_path)
-
-    def post_handler(self):
-        while True:
-            try:
-                self._send_posts()
-            except Exception:
-                logger.error(traceback.format_exc())
-                sys.exit()
-            time.sleep(10)
+            post_data = self._vk_session.method('wall.post', {
+                                'owner_id': f'-{self.group_id}',
+                                'message': text,
+                                'attachment': attachment,
+                            })
+            post_id = post_data.get('post_id')
+            if post_id:
+                self._vk_session.method('likes.add', {
+                    'type': 'post',
+                    'owner_id': f'-{self.group_id}',
+                    'item_id': post_id,
+                })
+        except Exception:
+            logger.error('VK ' + traceback.format_exc())
 
     def make_token(self):
         print('Для начала создайте "Standalone-приложение" и назовите его как-нибудь.\n'

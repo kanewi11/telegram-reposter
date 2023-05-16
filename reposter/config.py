@@ -11,13 +11,22 @@ PHONE = '+79876543212'
 CHANNEL = 'contest'
 
 # -------------------------- Вконтакте --------------------------
+REPOST_VK = True
 VK_ACCESS_TOKEN = 'vk1.a.IADHiudahsdajhdi...'
 VK_GROUP_ID = 123456789
+
+# -------------------------- Instagram --------------------------
+REPOST_INST = False
+PROXY = ''
+INST_LOGIN = ''
+INST_PASSWORD = ''
 
 # -------------------------- Не разбираешься - не трогай! --------------------------
 BASE_DIR = Path(__file__).parent
 FILES_DIR = BASE_DIR.joinpath('files')
 LOGS_DIR = BASE_DIR.joinpath('logs')
+
+PROXY = PROXY or None
 
 paths = [FILES_DIR, LOGS_DIR, ]
 

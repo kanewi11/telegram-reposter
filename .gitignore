@@ -6,7 +6,6 @@ test.py
 sessions/*
 *.session
 reposter/base/telegram.db
-reposter/config.py
 *.db
 
 ### macOS ###

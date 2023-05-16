@@ -5,8 +5,9 @@ from pathlib import Path
 # https://my.telegram.org
 API_ID = 1234567
 API_HASH = 'asdkapdokapodkapokdaposd'
+
 PHONE = '+79876543212'
-# https://t.me/contest
+# Your tg channel. Example: https://t.me/contest
 CHANNEL = 'contest'
 
 # -------------------------- Вконтакте --------------------------

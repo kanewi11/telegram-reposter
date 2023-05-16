@@ -6,6 +6,9 @@ files/
 files/*
 test.py
 sessions/*
+settings/
+settings/*
+*.json
 *.session
 reposter/base/telegram.db
 *.db

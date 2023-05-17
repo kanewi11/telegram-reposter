@@ -29,17 +29,30 @@ class TelegramTracker:
     FILES_DIR = BASE_DIR.joinpath('files')
 
     def __init__(self, api_id: str, api_hash: str, channel: str, phone: str, files_dir: PathLike = None) -> None:
+        """ Инициализация TelegramTracker
+
+        :param api_id: App api_id из "App configuration" -> https://my.telegram.org/apps
+        :param api_hash: App api_hash из "App configuration" -> https://my.telegram.org/apps
+        :param channel: Канал из которого будут браться посты, например: ссылка "https://t.me/contest" -
+            вам нужно передать "contest"
+        :param phone: Ваш номер телефона
+        :param files_dir: Путь где будут хранится скаченные посты
+        """
         uvloop.install()
 
         self.api_id = api_id
         self.api_hash = api_hash
         self.channel = channel
         self.phone = phone
-
         self.files_dir = files_dir
+
         if self.files_dir is None:
-            self.FILES_DIR.mkdir(exist_ok=True)
             self.files_dir = self.FILES_DIR
+
+        if not isinstance(self.files_dir, Path):
+            self.files_dir = Path(self.files_dir)
+
+        self.files_dir.mkdir(exist_ok=True)
 
     def start(self) -> None:
         asyncio.run(self._main())

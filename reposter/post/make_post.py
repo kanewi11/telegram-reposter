@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup as bs
 
 class PostMaker:
     INST_MEDIA_SUFFIXES = []
+
     @staticmethod
     def _html_to_text(html: str) -> str:
         hrefs = []
@@ -17,7 +18,7 @@ class PostMaker:
             if len(tag.get_text(strip=True)) == 0:
                 tag.extract()
 
-        # Вынимаем ссылку из тега <a> ссылку и вставляем в тег текстом
+        # Вынимаем ссылку из тега "а" ссылку и вставляем внутрь тега текстом
         a_tags = soup.find_all('a', href=True)
         for a_tag in a_tags:
             href = a_tag.get('href')
@@ -29,12 +30,10 @@ class PostMaker:
         text = soup.get_text()
         return text.replace('||', '\n')
 
-    def make_post_inst(self, file_paths: List[str]) -> Tuple[str, List[Union[str, Path]]]:
-        text, file_paths = self.make_post_vk(file_paths)
+    def _make_post_data_inst(self, file_paths: List[str]) -> Tuple[str, List[Union[str, Path]]]:
+        return self._make_post_data_vk(file_paths)
 
-        return self.make_post_vk(file_paths)
-
-    def make_post_vk(self, file_paths: List[str]) -> Tuple[str, List[Union[str, Path]]]:
+    def _make_post_data_vk(self, file_paths: List[str]) -> Tuple[str, List[Union[str, Path]]]:
         text = ''
         files = []
         for file_path in file_paths:

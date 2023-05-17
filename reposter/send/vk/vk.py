@@ -1,4 +1,3 @@
-import sys
 import traceback
 from typing import Union
 from urllib.parse import urlparse
@@ -8,11 +7,12 @@ import vk_api
 
 from reposter.logger import logger
 from reposter.post import PostMaker
+from reposter.send.send import Send
 from reposter.base.models import Post
 from reposter.send.vk.mixins import UploadMixin
 
 
-class VkPoster(UploadMixin, PostMaker):
+class VkPoster(UploadMixin, PostMaker, Send):
     _vk_session: vk_api.VkApi = None
     group_id: int = None
     __token: str = None
@@ -26,21 +26,30 @@ class VkPoster(UploadMixin, PostMaker):
                       '&v=5.131' \
                       '&state=123456'
 
-    def __init__(self, token: str, group_id: int, enabled: bool):
+    def __init__(self, token: str, group_id: int, enabled: bool = False):
+        """ Инициализация VkPoster
+
+        :param token: Токен выданный приложением (поможет получить метод make_token()).
+        :param group_id: id группы или сообщества куда будут выкладываться посты.
+        :param enabled: Включать ли постинг True или False.
+        """
         self.__token = token
         self.group_id = group_id
         self.enabled = enabled
 
-        if not self.enabled:
-            return
-
         if not self.__token:
             self.make_token()
+            self.enabled = False
 
         if not self.group_id:
             input('Пожалуйста вставьте ID группы reposter/config.py в переменную VK_GROUP_ID\n'
                   'и перезапустите приложение!')
-            sys.exit()
+            self.enabled = False
+
+        if not self.enabled:
+            logger.info('VK постер выключен ❌')
+            return
+        logger.info('VK постер включен ✅')
 
         self.__vk_auth()
 
@@ -53,7 +62,7 @@ class VkPoster(UploadMixin, PostMaker):
 
         try:
             file_paths = self._get_post_file_paths(post.dir_path)
-            text, file_paths = self.make_post_vk(file_paths)
+            text, file_paths = self._make_post_data_vk(file_paths)
             attachment = self._get_attachment(file_paths)
 
             post_data = self._vk_session.method('wall.post', {
@@ -94,8 +103,6 @@ class VkPoster(UploadMixin, PostMaker):
               f'Вот ваш токен, скопируйте его и вставьте его в reposter/config.py в переменную VK_ACCESS_TOKEN\n\n'
               f'{token}\n\n'
               f'и перезапустите приложение!')
-        input()
-        sys.exit()
 
     def get_url_access_key(self, app_id: Union[int, str]):
         return self._access_key_url.format(app_id=app_id)

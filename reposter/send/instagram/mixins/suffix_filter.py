@@ -20,7 +20,7 @@ class SuffixFilterMixin:
         '.BMP',
     )
 
-    def filter_files(self, file_paths: List[Path]):
+    def _filter_files(self, file_paths: List[Path]):
         for file_path in file_paths:
             if file_path.suffix.upper() not in self.suffixes:
                 file_paths.remove(file_path)

@@ -4,16 +4,17 @@ import traceback
 from pathlib import Path
 from typing import Union
 
-from instagrapi.exceptions import TwoFactorRequired
 from instagrapi import Client
+from instagrapi.exceptions import TwoFactorRequired
 
 from reposter.base import Post
 from reposter.logger import logger
+from reposter.send.send import Send
 from reposter.post import PostMaker
 from .mixins import SuffixFilterMixin
 
 
-class InstPoster(SuffixFilterMixin, PostMaker):
+class InstPoster(SuffixFilterMixin, PostMaker, Send):
     BASE_DIR = Path(__file__).parent
     SETTINGS_DIR = BASE_DIR.joinpath('settings')
     SETTINGS_DIR.mkdir(exist_ok=True)
@@ -21,15 +22,28 @@ class InstPoster(SuffixFilterMixin, PostMaker):
 
     bot: Client
 
-    def __init__(self, login: str, password: str, proxy: str, enabled: bool):
+    def __init__(self, login: str, password: str, proxy: str = None, enabled: bool = False):
+        """ Инициализация InstPoster
+
+        :param login: Логин от Instagram
+        :param password: Пароль от Instagram
+        :param proxy: Прокси (убедитесь что он подходит для Instagram)
+        :param enabled: Включать ли постинг True или False.
+        """
         self._login = login
         self.__password = password
         self.proxy = proxy
         self.enabled = enabled
 
-        if not self.enabled:
-            return
+        if not self._login or not self.__password:
+            input('Пожалуйста вставьте логин и пароль от Instagram reposter/config.py\n'
+                  'и перезапустите приложение!')
+            self.enabled = False
 
+        if not self.enabled:
+            logger.info('Instagram постер выключен ❌')
+            return
+        logger.info('Instagram постер включен ✅')
         self.bot = Client(proxy=proxy)
         settings = self.__get_settings()
         if settings:
@@ -69,6 +83,7 @@ class InstPoster(SuffixFilterMixin, PostMaker):
         if not login:
             logger.error('NOT LOGIN INSTAGRAM')
             print('Ошибка входа Instagram!')
+            self.enabled = False
             return
 
         self.__save_settings()
@@ -79,8 +94,8 @@ class InstPoster(SuffixFilterMixin, PostMaker):
 
         try:
             file_paths = self._get_post_file_paths(post.dir_path)
-            text, file_paths = self.make_post_inst(file_paths)
-            file_paths = self.filter_files(file_paths)
+            text, file_paths = self._make_post_data_inst(file_paths)
+            file_paths = self._filter_files(file_paths)
             self.bot.album_upload(file_paths, text)
         except Exception:
             logger.error(traceback.format_exc())

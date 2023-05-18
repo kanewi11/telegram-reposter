@@ -56,7 +56,7 @@ class VkPoster(UploadMixin, PostMaker, Send):
     def __vk_auth(self):
         self._vk_session = vk_api.VkApi(token=self.__token)
 
-    def send_posts(self, post: Post):
+    def send_post(self, post: Post):
         if not self.enabled:
             return
 

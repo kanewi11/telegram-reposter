@@ -88,7 +88,7 @@ class InstPoster(SuffixFilterMixin, PostMaker, Send):
 
         self.__save_settings()
 
-    def send_posts(self, post: Post):
+    def send_post(self, post: Post):
         if not self.enabled:
             return
 

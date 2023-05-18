@@ -1,7 +1,7 @@
 from sqlalchemy.future import select
 
-from .models import Post
-from .base import get_session, sync_session
+from reposter.database.models import Post
+from reposter.database.base import get_session, sync_session
 
 
 def add_post(dir_path: str, from_: str) -> None:

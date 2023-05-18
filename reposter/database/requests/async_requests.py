@@ -1,7 +1,7 @@
 from sqlalchemy.future import select
 
-from .models import Post
-from .base import get_async_session, async_session
+from reposter.database.models import Post
+from reposter.database.base import get_async_session, async_session
 
 
 async def async_add_post(dir_path: str, from_: str) -> None:

@@ -42,8 +42,9 @@ class VkPoster(UploadMixin, PostMaker, Send):
             self.enabled = False
 
         if not self.group_id:
-            input('Пожалуйста вставьте ID группы reposter/base.py в переменную VK_GROUP_ID\n'
-                  'и перезапустите приложение!')
+            if self.enabled:
+                input('Пожалуйста вставьте ID группы reposter/base.py в переменную VK_GROUP_ID\n'
+                      'и перезапустите приложение!')
             self.enabled = False
 
         if not self.enabled:

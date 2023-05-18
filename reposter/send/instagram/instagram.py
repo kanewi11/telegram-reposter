@@ -36,13 +36,15 @@ class InstPoster(SuffixFilterMixin, PostMaker, Send):
         self.enabled = enabled
 
         if not self._login or not self.__password:
-            input('Пожалуйста вставьте логин и пароль от Instagram reposter/base.py\n'
-                  'и перезапустите приложение!')
+            if self.enabled:
+                input('Пожалуйста вставьте логин и пароль от Instagram reposter/base.py\n'
+                      'и перезапустите приложение!')
             self.enabled = False
 
         if not self.enabled:
             logger.info('Instagram постер выключен ❌')
             return
+
         logger.info('Instagram постер включен ✅')
         self.bot = Client(proxy=proxy)
         settings = self.__get_settings()

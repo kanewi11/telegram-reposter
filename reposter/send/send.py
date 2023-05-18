@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from reposter.base import Post
+from reposter.database import Post
 from reposter.logger import logger
 
 

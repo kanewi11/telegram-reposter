@@ -13,7 +13,7 @@ from pyrogram import Client, filters, types, idle
 from pyrogram.errors.exceptions.unauthorized_401 import UserDeactivatedBan, AuthKeyUnregistered
 
 from reposter.logger import logger
-from reposter.base import add_post
+from reposter.database import async_add_post
 
 
 class TelegramTracker:
@@ -138,7 +138,7 @@ class TelegramTracker:
             await self._download_post(client, message)
 
         id_ = str(message.media_group_id or message.id)
-        add_post((await self.__create_or_get_post_dir(id_)).__str__(), 'telegram')
+        await async_add_post((await self.__create_or_get_post_dir(id_)).__str__(), 'telegram')
 
     @staticmethod
     async def _write_file(file_path: Union[PathLike, str], data: Union[bytes, str]) -> None:

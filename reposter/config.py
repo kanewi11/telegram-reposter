@@ -22,9 +22,11 @@ INST_LOGIN = ''
 INST_PASSWORD = ''
 
 # -------------------------- Не разбираешься - не трогай! --------------------------
+
 BASE_DIR = Path(__file__).parent
 FILES_DIR = BASE_DIR.joinpath('files')
 LOGS_DIR = BASE_DIR.joinpath('logs')
+DB_PATH = BASE_DIR.joinpath('posts.db')
 
 PROXY = PROXY or None
 
@@ -32,3 +34,5 @@ paths = [FILES_DIR, LOGS_DIR, ]
 
 for path in paths:
     path.mkdir(exist_ok=True)
+
+DSN = f'sqlite:///{DB_PATH}'

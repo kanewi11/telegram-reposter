@@ -8,7 +8,7 @@ import vk_api
 from reposter.logger import logger
 from reposter.post import PostMaker
 from reposter.send.send import Send
-from reposter.base.models import Post
+from reposter.database.models import Post
 from reposter.send.vk.mixins import UploadMixin
 
 
@@ -42,7 +42,7 @@ class VkPoster(UploadMixin, PostMaker, Send):
             self.enabled = False
 
         if not self.group_id:
-            input('Пожалуйста вставьте ID группы reposter/config.py в переменную VK_GROUP_ID\n'
+            input('Пожалуйста вставьте ID группы reposter/base.py в переменную VK_GROUP_ID\n'
                   'и перезапустите приложение!')
             self.enabled = False
 
@@ -100,7 +100,7 @@ class VkPoster(UploadMixin, PostMaker, Send):
 
         print('-' * 50)
         print(f'\n\n'
-              f'Вот ваш токен, скопируйте его и вставьте его в reposter/config.py в переменную VK_ACCESS_TOKEN\n\n'
+              f'Вот ваш токен, скопируйте его и вставьте его в reposter/base.py в переменную VK_ACCESS_TOKEN\n\n'
               f'{token}\n\n'
               f'и перезапустите приложение!')
 

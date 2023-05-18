@@ -3,7 +3,7 @@ from threading import Thread
 
 from reposter.tracking import TelegramTracker
 from reposter.send import VkPoster, InstPoster
-from reposter.base import get_new_posts, posted
+from reposter.database import get_new_posts, posted
 from reposter.config import (
     CHANNEL,
     API_ID,

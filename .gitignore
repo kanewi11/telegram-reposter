@@ -10,7 +10,7 @@ settings/
 settings/*
 *.json
 *.session
-reposter/base/telegram.db
+reposter/database/telegram.db
 *.db
 
 ### macOS ###

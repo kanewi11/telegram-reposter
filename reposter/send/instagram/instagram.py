@@ -7,7 +7,7 @@ from typing import Union
 from instagrapi import Client
 from instagrapi.exceptions import TwoFactorRequired
 
-from reposter.base import Post
+from reposter.database import Post
 from reposter.logger import logger
 from reposter.send.send import Send
 from reposter.post import PostMaker
@@ -36,7 +36,7 @@ class InstPoster(SuffixFilterMixin, PostMaker, Send):
         self.enabled = enabled
 
         if not self._login or not self.__password:
-            input('Пожалуйста вставьте логин и пароль от Instagram reposter/config.py\n'
+            input('Пожалуйста вставьте логин и пароль от Instagram reposter/base.py\n'
                   'и перезапустите приложение!')
             self.enabled = False
 

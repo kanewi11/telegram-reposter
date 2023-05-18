@@ -30,8 +30,8 @@ def post_handler():
     while True:
         posts = get_new_posts()
         for post in posts:
-            vk_poster.send_posts(post)
-            inst_poster.send_posts(post)
+            vk_poster.send_post(post)
+            inst_poster.send_post(post)
             posted(post.dir_path)
         time.sleep(10)
 

@@ -12,7 +12,7 @@ CHANNEL = 'contest'
 
 # -------------------------- Вконтакте --------------------------
 REPOST_VK = True
-VK_ACCESS_TOKEN = 'vk1.a.IADHiudahsdajhdi...'
+VK_ACCESS_TOKEN = ''
 VK_GROUP_ID = 123456789
 
 # -------------------------- Instagram --------------------------
@@ -29,6 +29,7 @@ LOGS_DIR = BASE_DIR.joinpath('logs')
 DB_PATH = BASE_DIR.joinpath('posts.db')
 
 PROXY = PROXY or None
+VK_ACCESS_TOKEN = VK_ACCESS_TOKEN or None
 
 paths = [FILES_DIR, LOGS_DIR, ]
 

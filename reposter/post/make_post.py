@@ -37,11 +37,11 @@ class PostMaker:
         text = ''
         files = []
         for file_path in file_paths:
-            if 'HTML_text.txt' in file_path:
+            if file_path.endswith('HTML_text.txt'):
                 with open(file_path) as text_file:
                     text = self._html_to_text(text_file.read())
                 continue
-            elif 'text.txt' in file_path:
+            elif file_path.endswith('text.txt'):
                 continue
             files.append(Path(file_path))
         return text, files

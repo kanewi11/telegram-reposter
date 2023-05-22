@@ -17,8 +17,10 @@ class UploadMixin:
         for file_path in file_paths:
             suffix = Path(file_path).suffix
             upload = VkUpload(self._vk_session)
+
             if isinstance(file_path, Path):
                 file_path = file_path.__str__()
+
             if suffix.upper() in self.video:
                 response = upload.video(file_path, group_id=self.group_id)
                 uploads.append('video{owner_id}_{video_id}'.format(**response))

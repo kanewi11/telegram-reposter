@@ -98,13 +98,11 @@ class TelegramTracker:
         id_ = str(message.media_group_id or message.id)
 
         if message.photo or message.video or message.document:
+
             try:
-                file = await message.download(in_memory=True)
-                bytes_ = bytes(file.getbuffer())
-                extension = fleep.get(bytes_).extension
-                file_dir = await self.__create_or_get_post_dir(id_)
-                file_path = file_dir.joinpath(str(message.id)).with_suffix('.' + extension[0])
-                await self._write_file(file_path, bytes_)
+                file_dir = (await self.__create_or_get_post_dir(id_)).__str__()
+                str_file_dir = file_dir if file_dir.endswith('/') else file_dir + '/'
+                await self.app.download_media(message, str_file_dir)
             except UserDeactivatedBan:
                 logger.warning(f'Session banned - {self.app.name}')
             except Exception:

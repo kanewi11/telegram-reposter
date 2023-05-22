@@ -1,4 +1,5 @@
 import traceback
+from pathlib import Path
 from typing import ContextManager
 from contextlib import contextmanager, asynccontextmanager
 
@@ -6,9 +7,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-from reposter.config import DSN
 from reposter.logger import logger
 
+
+BASE_DIR = Path(__file__).parent
+DB_PATH = BASE_DIR.joinpath('posts.db')
+
+DSN = f'sqlite:///{DB_PATH}'
 
 engine = create_engine(DSN, echo=False)
 

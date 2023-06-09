@@ -17,8 +17,10 @@ DSN = f'sqlite:///{DB_PATH}'
 
 engine = create_engine(DSN, echo=False)
 
-if DSN.startswith('sqlite'):
+if DSN.startswith('sqlite:'):
     DSN = DSN.replace('sqlite', 'sqlite+aiosqlite')
+elif DSN.startswith('postgresql+psycopg2:'):
+    DSN = DSN.replace('postgresql+psycopg2', 'postgresql+asyncpg')
 
 async_engine = create_async_engine(DSN, echo=False)
 

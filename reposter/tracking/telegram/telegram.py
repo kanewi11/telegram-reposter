@@ -145,7 +145,7 @@ class TelegramTracker:
             with open(file_path, 'wb') as f:
                 f.write(data)
         else:
-            with open(file_path, 'w') as f:
+            with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(data)
 
     async def __create_or_get_post_dir(self, dir_name: str) -> Path:

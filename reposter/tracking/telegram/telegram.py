@@ -1,12 +1,14 @@
 import random
 import asyncio
+import platform
 import traceback
 from os import PathLike
 from pathlib import Path
 from typing import Union
 
-import fleep
-import uvloop
+if platform.system() != 'Windows':
+    import uvloop
+    uvloop.install()
 from pyrogram.errors import ReactionInvalid
 from pyrogram.handlers import MessageHandler
 from pyrogram import Client, filters, types, idle
@@ -38,7 +40,6 @@ class TelegramTracker:
         :param phone: Ваш номер телефона
         :param files_dir: Путь где будут хранится скаченные посты
         """
-        uvloop.install()
 
         self.api_id = api_id
         self.api_hash = api_hash
